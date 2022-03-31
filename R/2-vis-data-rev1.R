@@ -18,9 +18,9 @@ library(tidyverse)
 library(ggwordcloud)
 
 
-singnmn <- "scrap-grsr-1920"
-relnm <- "grsr-rel-id"
-multnm <- "grsr-mult-id"
+# singnmn <- "scrap-grsr-1920-q"
+# relnm <- "grsr-rel-id-q"
+# multnm <- "grsr-mult-id-q"
 
 
 # ************************************************************************
@@ -50,7 +50,7 @@ dtatrends %>% filter(categories=="PHK") %>%
   theme(legend.position = "bottom",
         axis.text.x = element_text(size=8),
         axis.text.y = element_text(size=8))
-ggsave("graphics/phk.png")
+ggsave("graphics/phk-q.png")
 
 ## pencarian kerja----
 dtatrends %>% filter(categories!="PHK") %>% 
@@ -73,7 +73,7 @@ dtatrends %>% filter(categories!="PHK") %>%
   theme(legend.position = "bottom",
         axis.text.x = element_text(size=8),
         axis.text.y = element_text(size=8))
-ggsave("graphics/carikerja.png")
+ggsave("graphics/carikerja-q.png")
 
 
 # ************************************************************************
@@ -83,22 +83,62 @@ ggsave("graphics/carikerja.png")
 relquer <- read_csv(paste0("data/",relnm,".csv"))
 
 #wordcloud---
-relquer %>% filter(categories!="PHK",subject>=20) %>% 
+relquer %>% filter(categories!="PHK",subject>=15) %>% 
 ggplot(aes(label=value, size=subject,color=subject)) +
-  geom_text_wordcloud(show.legend=TRUE,rm_outside=TRUE) +
+  # geom_text_wordcloud(show.legend=TRUE,rm_outside=TRUE) +
+  geom_text_wordcloud(show.legend=TRUE,rm_outside=FALSE,
+                      grid_size = 1, max_steps = 1,
+                      eccentricity = .9)+
+  scale_size_area(max_size = 4) +
   labs(title=NULL, color=NULL) +
   guides(size=FALSE) +
   facet_wrap(~categories) +
   scale_colour_gradient(low="gray40",high="red") +
   theme(legend.position = "none")
-ggsave("graphics/kueri-terkait.png")
+ggsave("graphics/kueri-terkait-q.png")
+
+## Berjualan
+relquer %>% filter(categories=="Berjualan") %>% 
+  ggplot(aes(label=value, size=subject,color=subject)) +
+  geom_text_wordcloud(show.legend=TRUE,rm_outside=TRUE) +
+  labs(title=NULL, color=NULL) +
+  guides(size=FALSE) +
+  scale_colour_gradient(low="gray40",high="red") +
+  theme(legend.position = "none")
+
+## Driver online
+relquer %>% filter(categories=="Driver online") %>% 
+  ggplot(aes(label=value, size=subject,color=subject)) +
+  geom_text_wordcloud(show.legend=TRUE,rm_outside=TRUE) +
+  labs(title=NULL, color=NULL) +
+  guides(size=FALSE) +
+  scale_colour_gradient(low="gray40",high="red") +
+  theme(legend.position = "none")
+
+## Kurir
+relquer %>% filter(categories=="Kurir") %>% 
+  ggplot(aes(label=value, size=subject,color=subject)) +
+  geom_text_wordcloud(show.legend=TRUE,rm_outside=TRUE) +
+  labs(title=NULL, color=NULL) +
+  guides(size=FALSE) +
+  scale_colour_gradient(low="gray40",high="red") +
+  theme(legend.position = "none")
+
+## Situs loker
+relquer %>% filter(categories=="Situs loker") %>% 
+  ggplot(aes(label=value, size=subject,color=subject)) +
+  geom_text_wordcloud(show.legend=TRUE,rm_outside=TRUE) +
+  labs(title=NULL, color=NULL) +
+  guides(size=FALSE) +
+  scale_colour_gradient(low="gray40",high="red") +
+  theme(legend.position = "none")
 
 
 # ************************************************************************
 # Kata kunci pencarian (berganda) untuk dibandingkan----
 
 #membaca data
-dtatrends2 <- read_csv(paste0("data/",multnm,".csv"))
+dtatrends2 <- read_csv(paste0("data/",multn,".csv"))
 
 ## pencarian kerja----
 dtatrends2 %>% 
@@ -114,7 +154,10 @@ dtatrends2 %>%
        y="GRSR") +
   scale_x_continuous(breaks = seq(-10,32,2),
                      minor_breaks = NULL) +
+  scale_color_manual(breaks = c("Berjualan","Driver online",
+                                "Kurir", "Situs loker"),
+                     values = c("blue","red","seagreen4","black")) +
   theme(legend.position = "bottom",
         axis.text.x = element_text(size=8),
         axis.text.y = element_text(size=8))
-ggsave("graphics/carikerja-bandingkan.png")
+ggsave("graphics/carikerja-bandingkan-q.png")
